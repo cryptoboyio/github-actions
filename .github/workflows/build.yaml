@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build & Push Docker Image
 
 on:
   workflow_dispatch:
@@ -31,7 +31,7 @@ on:
 
 jobs:
   build-and-push:
-    name: Build and Push docker image
+    name: Build & Push Docker Image
     runs-on: self-hosted-general
     steps:
       - name: Checkout

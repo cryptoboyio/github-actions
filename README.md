@@ -14,14 +14,25 @@ on:
       - "release[0-9]+-[0-9]+"
 
 jobs:
-  build-image:
-    uses: cryptoboyio/action-build-and-push/.github/workflows/build.yaml@v1
-    with:
-      dockerfile: Dockerfile
-      image_tag: ${{ github.ref_name }}-${{ github.run_number }}
-      image_tag_latest: ${{ github.ref_name }}-latest
-      repository: ${{ github.event.repository.name }}
-    secrets:
-      github-token: ${{ secrets.ACCESS_REPOS_TOKEN }}
-      registry: ${{ secrets.AWS_ECR_REPO }}
+  build-and-push:
+    name: Build & Push Docker Image
+    runs-on: self-hosted-general
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Registry login
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.registry }}
+      - name: Build image
+        run: |
+          docker build \
+            --build-arg GITHUB_TOKEN="${{ secrets.github-token }}" \
+            -t ${{ secrets.registry }}/${{ inputs.repository }}:${{ inputs.image_tag }} \
+            -t ${{ secrets.registry }}/${{ inputs.repository }}:${{ inputs.image_tag_latest }} \
+            -f ${{ inputs.dockerfile }} .
+      - name: Push image
+        run: |
+          docker push ${{ secrets.registry }}/${{ inputs.repository }}:${{ inputs.image_tag }}
+          docker push ${{ secrets.registry }}/${{ inputs.repository }}:${{ inputs.image_tag_latest }}
 ```
