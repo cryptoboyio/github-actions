@@ -15,7 +15,7 @@ on:
 
 jobs:
   build-image:
-    uses: cryptoboyio/action-build-and-push/.github/workflows/build.yaml@v8
+    uses: cryptoboyio/action-build-and-push/.github/workflows/build.yaml@v1
     with:
       dockerfile: Dockerfile
       image_tag: ${{ github.ref_name }}-${{ github.run_number }}
