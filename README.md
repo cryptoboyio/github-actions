@@ -1,7 +1,7 @@
 # `GitHub Action – Build & Push Docker Image`
 
 ```yaml
-name: Build and Push Docker Image
+name: Build & Push Docker Image
 
 on:
   workflow_dispatch:
