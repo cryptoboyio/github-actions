@@ -23,7 +23,7 @@ jobs:
       push-image: true
       repository: ${{ github.event.repository.name }}
     secrets:
-      cash-registry: ${{ secrets.GITHUB_CASH_REGISTRY }}
+      cash-registry: ${{ secrets.ACTIONS_CASH_REGISTRY }}
       github-token: ${{ secrets.ACCESS_REPOS_TOKEN }}
-      registry: ${{ secrets.AWS_ECR_REPO }}
+      registry: ${{ secrets.ACTIONS_AWS_ECR_REPOSITORY }}
 ```
