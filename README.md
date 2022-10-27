@@ -15,14 +15,15 @@ on:
 
 jobs:
   build-and-push:
-    name: Build ${{ github.ref_name }}-${{ github.run_number }} image
-    uses: cryptoboyio/action-build-and-push/.github/workflows/build.yaml@v1
+    name: Build ${{ github.ref_name }}-${{ github.run_number }}
+    uses: cryptoboyio/action-build-and-push/.github/workflows/build.yaml@master
     with:
-      dockerfile: Dockerfile
       image_tag: ${{ github.ref_name }}-${{ github.run_number }}
       image_tag_latest: ${{ github.ref_name }}-latest
+      push-image: true
       repository: ${{ github.event.repository.name }}
     secrets:
+      cash-registry: ${{ secrets.GITHUB_CASH_REGISTRY }}
       github-token: ${{ secrets.ACCESS_REPOS_TOKEN }}
       registry: ${{ secrets.AWS_ECR_REPO }}
 ```
