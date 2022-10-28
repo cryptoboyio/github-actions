@@ -1,6 +1,8 @@
-# `Custom GitHub Actions`
+# Custom GitHub Actions
 
-## `Build & Push Docker Image`
+- [Build and Push Docker Image](#build-and-push-docker-image)
+
+## `Build and Push Docker Image`
 
 ```yaml
 name: Build & Push Docker Image
