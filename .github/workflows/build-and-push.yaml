@@ -3,34 +3,30 @@ name: Build & Push Docker Image
 on:
   workflow_call:
     inputs:
-      build-args:
+      BUILD_ARGS:
         type: string
         default: |
-          GITHUB_TOKEN=${{ secrets.github-token }}
-      context:
+          ""
+      CONTEXT:
         type: string
         default: .
-      dockerfile:
+      DOCKERFILE:
         type: string
         default: Dockerfile
-      image_tag:
+      IMAGE_TAG:
         type: string
         required: true
-      image_tag_latest:
+      IMAGE_TAG_LATEST:
         type: string
         required: true
-      push-image:
+      NO_CACHE:
+        type: boolean
+        default: false
+      PUSH_IMAGE:
         type: boolean
         default: true
-      repository:
+      REPOSITORY:
         type: string
-        required: true
-    secrets:
-      cash-registry:
-        required: true
-      github-token:
-        required: true
-      registry:
         required: true
 
 jobs:
@@ -53,16 +49,19 @@ jobs:
       - name: Login to docker registry
         uses: docker/login-action@v2
         with:
-          registry: ${{ secrets.registry }}
+          registry: ${{ secrets.ACTIONS_REGISTRY }}
       - name: Build and push docker image
         uses: docker/build-push-action@v3
         with:
-          build-args: ${{ inputs.build-args }}
-          cache-from: type=registry,ref=${{ secrets.cash-registry }}/${{ inputs.repository }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.cash-registry }}/${{ inputs.repository }}:buildcache,mode=max
-          context: ${{ inputs.context }}
-          file: ${{ inputs.dockerfile }}
-          push: ${{ inputs.push-image }}
+          build-args: |
+            GITHUB_TOKEN=${{ secrets.ACCESS_REPOS_TOKEN }}
+            ${{ inputs.build-args }}
+          cache-from: type=registry,ref=${{ secrets.ACTIONS_CACHE_REGISTRY }}/${{ inputs.repository }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.ACTIONS_CACHE_REGISTRY }}/${{ inputs.repository }}:buildcache,mode=max
+          context: ${{ inputs.CONTEXT }}
+          file: ${{ inputs.DOCKERFILE }}
+          no-cache: ${{ inputs.NO_CACHE }}
+          push: ${{ inputs.PUSH_IMAGE }}
           tags: |
-            ${{ secrets.registry }}/${{ inputs.repository }}:${{ inputs.image_tag }}
-            ${{ secrets.registry }}/${{ inputs.repository }}:${{ inputs.image_tag_latest }}
+            ${{ secrets.ACTIONS_REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG }}
+            ${{ secrets.ACTIONS_REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG_LATEST }}
