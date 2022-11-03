@@ -61,8 +61,8 @@ jobs:
           build-args: |
             GITHUB_TOKEN=${{ secrets.ACCES_TOKEN }}
             ${{ secrets.BUILD_ARGS }}
-          cache-from: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.repository }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.repository }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache,mode=max
           context: ${{ inputs.CONTEXT }}
           file: ${{ inputs.DOCKERFILE }}
           no-cache: ${{ inputs.NO_CACHE }}
