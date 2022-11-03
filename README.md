@@ -47,7 +47,7 @@ jobs:
     with:
       IMAGE_TAG: pr-${{ github.run_number }}
       IMAGE_TAG_LATEST: pr-${{ github.run_number }}-latest
-      PUSH_IMAGE: true
+      PUSH_IMAGE: false
       REPOSITORY: ${{ github.event.repository.name }}
     secrets:
       ACCESS_TOKEN: ${{ secrets.ACCESS_REPOS_TOKEN }}
