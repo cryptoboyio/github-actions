@@ -25,11 +25,11 @@ on:
         type: string
         required: true
     secrets:
+      ACCES_TOKEN:
+        required: true
       BUILD_ARGS:
         required: false
       CACHE_REGISTRY:
-        required: true
-      GITHUB_TOKEN:
         required: true
       REGISTRY:
         required: true
@@ -59,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           build-args: |
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN=${{ secrets.ACCES_TOKEN }}
             ${{ secrets.BUILD_ARGS }}
           cache-from: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.repository }}:buildcache
           cache-to: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.repository }}:buildcache,mode=max
