@@ -2,9 +2,30 @@
 
 - [Build and Push Docker Image](#build-and-push-docker-image)
 
-## `Build and Push Docker Image`
+## Build and Push Docker Image
 
+### Inputs
 
+| Name               | Type    | Required | Default value | Description                |
+| ------------------ | ------- | -------- | ------------- | -------------------------- |
+| `CONTEXT`          | String  | false    | `.`           | Docker context             |
+| `DOCKERFILE`       | String  | false    | `Dockerfile`  | Dockerfile                 |
+| `IMAGE_TAG`        | String  | true     | `–`           | Image tag                  |
+| `IMAGE_TAG_LATEST` | String  | true     | `–`           | Image tag latest           |
+| `NO_CACHE`         | Boolean | false    | `false`       | Build without cache        |
+| `PUSH_IMAGE`       | Boolean | false    | `true`        | Push image to the registry |
+| `REPOSITORY`       | String  | true     | `–`           | Repository in the registry |
+
+### Secrets
+
+| Name             | Type   | Required | Description           |
+| ---------------- | ------ | -------- | --------------------- |
+| `ACCESS_TOKEN`   | String | true     | GitHub access token   |
+| `BUILD_ARGS`     | List   | false    | Docker build args     |
+| `CACHE_REGISTRY` | String | true     | Docker Cache registry |
+| `REGISTRY`       | String | true     | Docker registry       |
+
+### Example
 
 ```yaml
 name: Build & Push Docker Image
