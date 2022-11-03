@@ -4,6 +4,8 @@
 
 ## `Build and Push Docker Image`
 
+
+
 ```yaml
 name: Build & Push Docker Image
 
@@ -19,15 +21,17 @@ on:
 
 jobs:
   build-and-push:
-    name: Build ${{ github.ref_name }}-${{ github.run_number }}
-    uses: cryptoboyio/action-build-and-push/.github/workflows/build.yaml@master
+    name: Build PR-${{ github.run_number }}
+    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@master
     with:
-      image_tag: ${{ github.ref_name }}-${{ github.run_number }}
-      image_tag_latest: ${{ github.ref_name }}-latest
-      push-image: true
-      repository: ${{ github.event.repository.name }}
+      IMAGE_TAG: pr-${{ github.run_number }}
+      IMAGE_TAG_LATEST: pr-${{ github.run_number }}-latest
+      PUSH_IMAGE: true
+      REPOSITORY: ${{ github.event.repository.name }}
     secrets:
-      cash-registry: ${{ secrets.ACTIONS_CASH_REGISTRY }}
-      github-token: ${{ secrets.ACCESS_REPOS_TOKEN }}
-      registry: ${{ secrets.ACTIONS_AWS_ECR_REPOSITORY }}
+      ACCESS_TOKEN: ${{ secrets.ACCESS_REPOS_TOKEN }}
+      BUILD_ARGS: |
+        MAXMIND_LICENSE_KEY=${{ secrets.MAXMIND_LICENSE_KEY }}
+      CACHE_REGISTRY: ${{ secrets.ACTIONS_CACHE_REGISTRY }}
+      REGISTRY: ${{ secrets.ACTIONS_REGISTRY }}
 ```
