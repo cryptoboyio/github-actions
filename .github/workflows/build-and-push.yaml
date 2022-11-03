@@ -3,6 +3,10 @@ name: Build & Push Docker Image
 on:
   workflow_call:
     inputs:
+      BUILD_ARGS:
+        type: string
+        default: |
+          ""
       CONTEXT:
         type: string
         default: .
@@ -24,9 +28,6 @@ on:
       REPOSITORY:
         type: string
         required: true
-    secrets:
-      BUILD_ARGS:
-        required: false
 
 jobs:
   build-and-push:
@@ -54,7 +55,7 @@ jobs:
         with:
           build-args: |
             GITHUB_TOKEN=${{ secrets.ACCESS_REPOS_TOKEN }}
-            ${{ secrets.BUILD_ARGS }}
+            ${{ inputs.BUILD_ARGS }}
           cache-from: type=registry,ref=${{ secrets.ACTIONS_CACHE_REGISTRY }}/${{ inputs.repository }}:buildcache
           cache-to: type=registry,ref=${{ secrets.ACTIONS_CACHE_REGISTRY }}/${{ inputs.repository }}:buildcache,mode=max
           context: ${{ inputs.CONTEXT }}
