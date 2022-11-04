@@ -25,14 +25,14 @@ on:
         type: string
         default: ${{ github.event.repository.name }}
     secrets:
-      ACCESS_TOKEN:
-        required: true
+      # ACCESS_TOKEN:
+      #   required: true
       BUILD_ARGS:
         required: false
-      CACHE_REGISTRY:
-        required: true
-      REGISTRY:
-        required: true
+      # CACHE_REGISTRY:
+      #   required: true
+      # REGISTRY:
+      #   required: true
 
 jobs:
   build-and-push:
@@ -54,19 +54,19 @@ jobs:
       - name: Login to docker registry
         uses: docker/login-action@v2
         with:
-          registry: ${{ secrets.REGISTRY }}
+          registry: ${{ secrets.ACTIONS_REGISTRY }}
       - name: Build and push docker image
         uses: docker/build-push-action@v3
         with:
           build-args: |
-            GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }}
+            GITHUB_TOKEN=${{ secrets.ACCESS_REPOS_TOKEN }}
             ${{ secrets.BUILD_ARGS }}
-          cache-from: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ secrets.ACTIONS_CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.ACTIONS_CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache,mode=max
           context: ${{ inputs.CONTEXT }}
           file: ${{ inputs.DOCKERFILE }}
           no-cache: ${{ inputs.NO_CACHE }}
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
-            ${{ secrets.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG }}
-            ${{ secrets.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG_LATEST }}
+            ${{ secrets.ACTIONS_REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG }}
+            ${{ secrets.ACTIONS_REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG_LATEST }}
