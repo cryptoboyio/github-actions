@@ -6,6 +6,12 @@ on:
       CONTEXT:
         type: string
         default: .
+      CACHE_REGISTRY:
+        type: string
+        default: cache-registry.mrcr.io
+      REGISTRY:
+        type: string
+        default: 155215722524.dkr.ecr.eu-central-1.amazonaws.com
       DOCKERFILE:
         type: string
         default: Dockerfile
@@ -29,10 +35,6 @@ on:
         required: true
       BUILD_ARGS:
         required: false
-      CACHE_REGISTRY:
-        required: false
-      REGISTRY:
-        required: false
 
 jobs:
   build-and-push:
@@ -54,19 +56,19 @@ jobs:
       - name: Login to docker registry
         uses: docker/login-action@v2
         with:
-          registry: ${{ secrets.REGISTRY }}
+          registry: ${{ inputs.REGISTRY }}
       - name: Build and push docker image
         uses: docker/build-push-action@v3
         with:
           build-args: |
             GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }}
             ${{ secrets.BUILD_ARGS }}
-          cache-from: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache
+          cache-to: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache,mode=max
           context: ${{ inputs.CONTEXT }}
           file: ${{ inputs.DOCKERFILE }}
           no-cache: ${{ inputs.NO_CACHE }}
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
-            ${{ secrets.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG }}
-            ${{ secrets.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG_LATEST }}
+            ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG }}
+            ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG_LATEST }}
