@@ -11,10 +11,10 @@ on:
         default: Dockerfile
       IMAGE_TAG:
         type: string
-        required: true
+        default: ${{ github.ref_name }}-${{ github.run_number }}
       IMAGE_TAG_LATEST:
         type: string
-        required: true
+        default: ${{ github.ref_name }}-latest
       NO_CACHE:
         type: boolean
         default: false
@@ -23,16 +23,16 @@ on:
         default: true
       REPOSITORY:
         type: string
-        required: true
+        default: ${{ github.event.repository.name }}
     secrets:
       ACCESS_TOKEN:
         required: true
       BUILD_ARGS:
         required: false
       CACHE_REGISTRY:
-        required: true
+        required: false
       REGISTRY:
-        required: true
+        required: false
 
 jobs:
   build-and-push:
