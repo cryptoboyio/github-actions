@@ -6,15 +6,15 @@
 
 ### Inputs
 
-| Name               | Type    | Required | Default value | Description                |
-| ------------------ | ------- | -------- | ------------- | -------------------------- |
-| `CONTEXT`          | String  | false    | `.`           | Docker context             |
-| `DOCKERFILE`       | String  | false    | `Dockerfile`  | Dockerfile                 |
-| `IMAGE_TAG`        | String  | true     | `–`           | Image tag                  |
-| `IMAGE_TAG_LATEST` | String  | true     | `–`           | Image tag latest           |
-| `NO_CACHE`         | Boolean | false    | `false`       | Build without cache        |
-| `PUSH_IMAGE`       | Boolean | false    | `true`        | Push image to the registry |
-| `REPOSITORY`       | String  | true     | `–`           | Repository in the registry |
+| Name               | Type    | Required | Default value                                     | Description                |
+| ------------------ | ------- | -------- | ------------------------------------------------- | -------------------------- |
+| `CONTEXT`          | String  | false    | `.`                                               | Docker context             |
+| `DOCKERFILE`       | String  | false    | `Dockerfile`                                      | Dockerfile                 |
+| `IMAGE_TAG`        | String  | false    | `${{ github.ref_name }}-${{ github.run_number }}` | Image tag                  |
+| `IMAGE_TAG_LATEST` | String  | false    | `${{ github.ref_name }}-latest`                   | Image tag latest           |
+| `NO_CACHE`         | Boolean | false    | `false`                                           | Build without cache        |
+| `PUSH_IMAGE`       | Boolean | false    | `true`                                            | Push image to the registry |
+| `REPOSITORY`       | String  | false    | `${{ github.event.repository.name }}`             | Repository in the registry |
 
 ### Secrets
 
@@ -22,8 +22,8 @@
 | ---------------- | ------ | -------- | --------------------- |
 | `ACCESS_TOKEN`   | String | true     | GitHub access token   |
 | `BUILD_ARGS`     | List   | false    | Docker build args     |
-| `CACHE_REGISTRY` | String | true     | Docker Cache registry |
-| `REGISTRY`       | String | true     | Docker registry       |
+| `CACHE_REGISTRY` | String | false    | Docker Cache registry |
+| `REGISTRY`       | String | false    | Docker registry       |
 
 ### Example
 
@@ -42,17 +42,8 @@ on:
 
 jobs:
   build-and-push:
-    name: Build PR-${{ github.run_number }}
-    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@master
-    with:
-      IMAGE_TAG: pr-${{ github.run_number }}
-      IMAGE_TAG_LATEST: pr-${{ github.run_number }}-latest
-      PUSH_IMAGE: false
-      REPOSITORY: ${{ github.event.repository.name }}
+    name: Build ${{ github.ref_name }}-${{ github.run_number }}
+    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@develop
     secrets:
       ACCESS_TOKEN: ${{ secrets.ACCESS_REPOS_TOKEN }}
-      BUILD_ARGS: |
-        MAXMIND_LICENSE_KEY=${{ secrets.MAXMIND_LICENSE_KEY }}
-      CACHE_REGISTRY: ${{ secrets.ACTIONS_CACHE_REGISTRY }}
-      REGISTRY: ${{ secrets.ACTIONS_REGISTRY }}
 ```

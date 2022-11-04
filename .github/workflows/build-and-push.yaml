@@ -30,9 +30,9 @@ on:
       BUILD_ARGS:
         required: false
       CACHE_REGISTRY:
-        required: true
+        required: false
       REGISTRY:
-        required: true
+        required: false
 
 jobs:
   build-and-push:
