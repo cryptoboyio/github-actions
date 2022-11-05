@@ -75,12 +75,12 @@ jobs:
               is_tag_latest: bool = False
           ) -> str:
               if '/' not in tag:
-                  return f"{REGISTRY}-{REPOSITORY}-{tag}"
+                  return f"{REGISTRY}/{REPOSITORY}:{tag}"
               else:
                   if is_tag_latest:
-                      return f"{REGISTRY}-{REPOSITORY}-{'build-latest'}"
+                      return f"{REGISTRY}/{REPOSITORY}:{'build-latest'}"
                   else:
-                      return f"{REGISTRY}-{REPOSITORY}-{f'build-{RUN_NUMBER}'}"
+                      return f"{REGISTRY}/{REPOSITORY}:{f'build-{RUN_NUMBER}'}"
 
 
           output_tag = create_image_tag(TAG)
