@@ -6,15 +6,15 @@
 
 ### Inputs
 
-| Name               | Type    | Required | Default value                       | Description                |
-| ------------------ | ------- | -------- | ----------------------------------- | -------------------------- |
-| `CONTEXT`          | String  | false    | `.`                                 | Docker context             |
-| `DOCKERFILE`       | String  | false    | `Dockerfile`                        | Dockerfile                 |
-| `IMAGE_TAG`        | String  | false    | `github.ref_name-github.run_number` | Image tag                  |
-| `IMAGE_TAG_LATEST` | String  | false    | `github.ref_name-latest`            | Image tag latest           |
-| `NO_CACHE`         | Boolean | false    | `false`                             | Build without cache        |
-| `PUSH_IMAGE`       | Boolean | false    | `true`                              | Push image to the registry |
-| `REPOSITORY`       | String  | false    | `github.event.repository.name`      | Repository in the registry |
+| Name               | Type    | Required | Default value                                     | Description                |
+| ------------------ | ------- | -------- | ------------------------------------------------- | -------------------------- |
+| `CONTEXT`          | String  | false    | `.`                                               | Docker context             |
+| `DOCKERFILE`       | String  | false    | `Dockerfile`                                      | Dockerfile                 |
+| `IMAGE_TAG`        | String  | false    | `${{ github.ref_name }}-${{ github.run_number }}` | Image tag                  |
+| `IMAGE_TAG_LATEST` | String  | false    | `${{ github.ref_name }}-latest`                   | Image tag latest           |
+| `NO_CACHE`         | Boolean | false    | `false`                                           | Build without cache        |
+| `PUSH_IMAGE`       | Boolean | false    | `true`                                            | Push image to the registry |
+| `REPOSITORY`       | String  | false    | `${{ github.event.repository.name }}`             | Repository in the registry |
 
 If `IMAGE_TAG` or `IMAGE_TAG_LATEST` contains a `/` character, then the default values ​​will be as follows:
 
