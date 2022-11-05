@@ -70,10 +70,7 @@ jobs:
           TAG_LATEST = "${{ inputs.IMAGE_TAG_LATEST }}"
 
 
-          def create_image_tag(
-              tag: str,
-              is_tag_latest: bool = False
-          ) -> str:
+          def create_image_tag(tag: str, is_tag_latest: bool = False) -> str:
               if '/' not in tag:
                   return f"{REGISTRY}/{REPOSITORY}:{tag}"
               else:
