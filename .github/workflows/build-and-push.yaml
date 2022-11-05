@@ -57,6 +57,35 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ${{ inputs.REGISTRY }}
+      - name: Customize image list
+        id: image-list
+        run: |
+          import os
+
+
+          REGISTRY   = "${{ inputs.REGISTRY }}"
+          REPOSITORY = "${{ inputs.REPOSITORY }}"
+          RUN_NUMBER = "${{ github.run_number }}"
+          TAG        = "${{ inputs.IMAGE_TAG }}"
+          TAG_LATEST = "${{ inputs.IMAGE_TAG_LATEST }}"
+
+
+          def create_image_tag(tag: str, is_tag_latest: bool = False) -> str:
+              if '/' not in tag:
+                  return f"{REGISTRY}/{REPOSITORY}:{tag}"
+              else:
+                  if is_tag_latest:
+                      return f"{REGISTRY}/{REPOSITORY}:{'build-latest'}"
+                  else:
+                      return f"{REGISTRY}/{REPOSITORY}:{f'build-{RUN_NUMBER}'}"
+
+
+          output_tag = create_image_tag(TAG)
+          output_tag_latest = create_image_tag(TAG_LATEST, True)
+
+          os.system(f'echo "IMAGE_TAG={output_tag}" >> $GITHUB_OUTPUT')
+          os.system(f'echo "IMAGE_TAG_LATEST={output_tag_latest}" >> $GITHUB_OUTPUT')
+        shell: python
       - name: Build and push docker image
         uses: docker/build-push-action@v3
         with:
@@ -70,5 +99,5 @@ jobs:
           no-cache: ${{ inputs.NO_CACHE }}
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
-            ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG }}
-            ${{ inputs.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ inputs.IMAGE_TAG_LATEST }}
+            ${{ steps.image-list.outputs.IMAGE_TAG }}
+            ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}
