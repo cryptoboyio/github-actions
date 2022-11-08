@@ -119,8 +119,8 @@ jobs:
 
 
           general_condition = BRANCH_NAME in ['develop', 'master'] and PUSH_IMAGE and CONCLUSION == 'success' and SLACK_TOKEN != ''
-          success_condition = OUTCOME == 'failure' and general_condition
-          failure_condition = OUTCOME == 'success' and general_condition
+          success_condition = OUTCOME == 'success' and general_condition
+          failure_condition = OUTCOME == 'failure' and general_condition
 
           print(success_condition)
           print(failure_condition)
