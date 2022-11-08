@@ -135,10 +135,9 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": "`${{ inputs.REPOSITORY }}` successful `${{ github.ref_name }}` build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"",
+              "text": "`${{ inputs.REPOSITORY }}` successful `${{ github.ref_name }}` build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
               "attachments": [
                 {
-                  "pretext": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` successful failed",
                   "color": "28a745",
                   "fields": [
                     {
@@ -164,7 +163,7 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": "`${{ inputs.REPOSITORY }}` failed `${{ github.ref_name }}` build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"",
+              "text": "`${{ inputs.REPOSITORY }}` failed `${{ github.ref_name }}` build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
               "attachments": [
                 {
                   "color": "E96D76",
