@@ -105,6 +105,7 @@ jobs:
             ${{ steps.image-list.outputs.IMAGE_TAG }}
             ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}
       - name: Slack alert condition
+        if: success() || failure()
         id: slack-alert-flag
         run: |
           import os
