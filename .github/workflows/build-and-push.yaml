@@ -129,7 +129,7 @@ jobs:
           os.system(f'echo "SLACK_FAILURE_FLAG={failure_condition}" >> $GITHUB_OUTPUT')
         shell: python
       - name: Send a successful Slack notification
-        if: steps.slack-alert-flag.outputs.SLACK_SUCCESS_FLAG == 'success'
+        if: steps.slack-alert-flag.outputs.SLACK_SUCCESS_FLAG == 'True'
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "C049W03GZQT"
@@ -158,7 +158,7 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Send a failure Slack notification
-        if: steps.slack-alert-flag.outputs.SLACK_SUCCESS_FLAG == 'failure'
+        if: steps.slack-alert-flag.outputs.SLACK_SUCCESS_FLAG == 'True'
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "C049W03GZQT"
