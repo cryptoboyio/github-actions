@@ -113,20 +113,29 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": "GitHub Action Successful Build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-              "blocks": [
+              "text": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` successful build",
+              "attachments": [
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ inputs.REPOSITORY }} ${{ github.ref_name }} image tag: ${{ steps.image-list.outputs.IMAGE_TAG }}"
-                  }
+                  "pretext": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` successful failed",
+                  "color": "28a745",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "Success"
+                    },
+                    {
+                      "title": "Image build",
+                      "short": true,
+                      "value": "`${{ github.ref_name }}-${{ github.run_number }}`"
+                    }
+                  ]
                 }
               ]
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      - name: Send a successful Slack notification
+      - name: Send a failure Slack notification
         id: slack-failure
         if: steps.docker-build.outcome == "failure" and (${{ github.ref_name }} == "master" or ${{ github.ref_name }} == "develop") and ${{ inputs.PUSH_IMAGE }} and ${{ env.SLACK_BOT_TOKEN != '' }}
         uses: slackapi/slack-github-action@v1.23.0
@@ -134,14 +143,23 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": "GitHub Action Failure Build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-              "blocks": [
+              "text": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` failed build",
+              "attachments": [
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ inputs.REPOSITORY }} had a failure ${{ github.ref_name }} build"
-                  }
+                  "pretext": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` failed build",
+                  "color": "dbab09",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "Failed"
+                    },
+                    {
+                      "title": "Image build",
+                      "short": true,
+                      "value": "`${{ github.ref_name }}-${{ github.run_number }}`"
+                    }
+                  ]
                 }
               ]
             }
