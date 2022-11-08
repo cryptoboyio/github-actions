@@ -106,7 +106,7 @@ jobs:
             ${{ steps.image-list.outputs.IMAGE_TAG }}
             ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}
       - name: Customize image list
-        id: image-list
+        id: test
         run: |
           print('${{ steps.docker-build.outcome }}')
           print('${{ steps.docker-build.conclusion }}')
