@@ -105,6 +105,15 @@ jobs:
           tags: |
             ${{ steps.image-list.outputs.IMAGE_TAG }}
             ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}
+      - name: Customize image list
+        id: image-list
+        run: |
+          print('${{ steps.docker-build.outcome }}')
+          print('${{ steps.docker-build.conclusion }}')
+          print('${{ github.ref_name }}')
+          print('${{ inputs.PUSH_IMAGE }}')
+          print('${{ env.SLACK_BOT_TOKEN }}')
+        shell: python
       - name: Send a successful Slack notification
         if: (steps.docker-build.outcome == 'success' && steps.docker-build.conclusion == 'success') && (github.ref_name == 'master' || github.ref_name == 'develop') && (inputs.PUSH_IMAGE == true) && ('${{ env.SLACK_BOT_TOKEN }}' != '')
         uses: slackapi/slack-github-action@v1.23.0
