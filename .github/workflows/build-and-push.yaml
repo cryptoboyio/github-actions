@@ -65,10 +65,10 @@ jobs:
           import os
 
 
-          REGISTRY   = "${{ inputs.REGISTRY }}"
+          REGISTRY = "${{ inputs.REGISTRY }}"
           REPOSITORY = "${{ inputs.REPOSITORY }}"
           RUN_NUMBER = "${{ github.run_number }}"
-          TAG        = "${{ inputs.IMAGE_TAG }}"
+          TAG = "${{ inputs.IMAGE_TAG }}"
           TAG_LATEST = "${{ inputs.IMAGE_TAG_LATEST }}"
 
 
@@ -115,7 +115,7 @@ jobs:
           CONCLUSION = '${{ steps.docker-build.conclusion }}'
           OUTCOME = '${{ steps.docker-build.outcome }}'
           PUSH_IMAGE = bool('${{ inputs.PUSH_IMAGE }}')
-          SLACK_TOKEN = '${{ env.SLACK_BOT_TOKEN }}'
+          SLACK_TOKEN = '${{ secrets.SLACK_BOT_TOKEN }}'
 
 
           general_condition = BRANCH_NAME in ['develop', 'master'] and PUSH_IMAGE and CONCLUSION == 'success' and SLACK_TOKEN != ''
