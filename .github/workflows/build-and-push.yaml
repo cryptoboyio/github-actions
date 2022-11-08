@@ -135,11 +135,15 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": "`${{ inputs.REPOSITORY }}` successful `${{ github.ref_name }}` build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
               "attachments": [
                 {
                   "color": "28a745",
                   "fields": [
+                    {
+                      "title": "Repository",
+                      "short": true,
+                      "value": "*${{ inputs.REPOSITORY }}*"
+                    },
                     {
                       "title": "Status",
                       "short": true,
@@ -148,8 +152,13 @@ jobs:
                     {
                       "title": "Image build",
                       "short": true,
-                      "value": "`${{ github.ref_name }}-${{ github.run_number }}`"
-                    }
+                      "value": "*${{ github.ref_name }}-${{ github.run_number }}*"
+                    },
+                    {
+                      "title": "Details",
+                      "short": true,
+                      "value": "${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                    },
                   ]
                 }
               ]
@@ -163,11 +172,15 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": "`${{ inputs.REPOSITORY }}` failed `${{ github.ref_name }}` build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
               "attachments": [
                 {
                   "color": "E96D76",
                   "fields": [
+                    {
+                      "title": "Repository",
+                      "short": true,
+                      "value": "*${{ inputs.REPOSITORY }}*"
+                    },
                     {
                       "title": "Status",
                       "short": true,
@@ -176,8 +189,13 @@ jobs:
                     {
                       "title": "Image build",
                       "short": true,
-                      "value": "`${{ github.ref_name }}-${{ github.run_number }}`"
-                    }
+                      "value": "*${{ github.ref_name }}-${{ github.run_number }}*"
+                    },
+                    {
+                      "title": "Details",
+                      "short": true,
+                      "value": "${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                    },
                   ]
                 }
               ]
