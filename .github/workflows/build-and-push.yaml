@@ -135,7 +135,7 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` successful build",
+              "text": "`${{ inputs.REPOSITORY }}` successful `${{ github.ref_name }}` build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"",
               "attachments": [
                 {
                   "pretext": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` successful failed",
@@ -164,11 +164,10 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` failed build",
+              "text": "`${{ inputs.REPOSITORY }}` failed `${{ github.ref_name }}` build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"",
               "attachments": [
                 {
-                  "pretext": "`${{ inputs.REPOSITORY }}` `${{ github.ref_name }}` failed build",
-                  "color": "dbab09",
+                  "color": "E96D76",
                   "fields": [
                     {
                       "title": "Status",
