@@ -112,13 +112,12 @@ jobs:
 
 
           BRANCH_NAME = '${{ github.ref_name }}'
-          CONCLUSION = '${{ steps.docker-build.conclusion }}'
           OUTCOME = '${{ steps.docker-build.outcome }}'
           PUSH_IMAGE = bool('${{ inputs.PUSH_IMAGE }}')
           SLACK_TOKEN = '${{ secrets.SLACK_BOT_TOKEN }}'
 
 
-          general_condition = BRANCH_NAME in ['develop', 'master'] and PUSH_IMAGE and CONCLUSION == 'success' and SLACK_TOKEN != ''
+          general_condition = BRANCH_NAME in ['develop', 'master'] and PUSH_IMAGE and SLACK_TOKEN != ''
           success_condition = OUTCOME == 'success' and general_condition
           failure_condition = OUTCOME == 'failure' and general_condition
 
