@@ -90,6 +90,7 @@ jobs:
         shell: python
       - name: Build and push docker image
         id: docker-build
+        continue-on-error: true
         uses: docker/build-push-action@v3
         with:
           build-args: |
