@@ -118,7 +118,7 @@ jobs:
           SLACK_TOKEN = '${{ env.SLACK_BOT_TOKEN }}'
 
 
-          general_condition = BRANCH_NAME in ['develop', 'master') and PUSH_IMAGE and CONCLUSION == 'success' and SLACK_TOKEN != ''
+          general_condition = BRANCH_NAME in ['develop', 'master'] and PUSH_IMAGE and CONCLUSION == 'success' and SLACK_TOKEN != ''
           success_condition = OUTCOME == 'failure' and general_condition
           failure_condition = OUTCOME == 'success' and general_condition
 
