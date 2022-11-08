@@ -135,33 +135,7 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "attachments": [
-                {
-                  "color": "28a745",
-                  "fields": [
-                    {
-                      "title": "Repository",
-                      "short": true,
-                      "value": "*${{ inputs.REPOSITORY }}*"
-                    },
-                    {
-                      "title": "Status",
-                      "short": true,
-                      "value": "Success"
-                    },
-                    {
-                      "title": "Image build",
-                      "short": true,
-                      "value": "*${{ github.ref_name }}-${{ github.run_number }}*"
-                    },
-                    {
-                      "title": "Details",
-                      "short": true,
-                      "value": "${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-                    },
-                  ]
-                }
-              ]
+              "text": "*${{ inputs.REPOSITORY }}* – `${{ github.ref_name }}-${{ github.run_number }}` successful build",
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -172,33 +146,7 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "attachments": [
-                {
-                  "color": "E96D76",
-                  "fields": [
-                    {
-                      "title": "Repository",
-                      "short": true,
-                      "value": "*${{ inputs.REPOSITORY }}*"
-                    },
-                    {
-                      "title": "Status",
-                      "short": true,
-                      "value": "Failed"
-                    },
-                    {
-                      "title": "Image build",
-                      "short": true,
-                      "value": "*${{ github.ref_name }}-${{ github.run_number }}*"
-                    },
-                    {
-                      "title": "Details",
-                      "short": true,
-                      "value": "${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-                    },
-                  ]
-                }
-              ]
+              "text": "`${{ inputs.REPOSITORY }}` – `${{ github.ref_name }}-${{ github.run_number }}` [failed](${{ github.event.pull_request.html_url || github.event.head_commit.url }}) build",
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
