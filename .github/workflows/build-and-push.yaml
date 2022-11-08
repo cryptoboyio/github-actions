@@ -107,7 +107,7 @@ jobs:
             ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}
       - name: Send a successful Slack notification
         id: slack-success
-        if: steps.docker-build.outcome == "success" and (${{ github.ref_name }} == "master" or ${{ github.ref_name }} == "develop") and ${{ inputs.PUSH_IMAGE }} and ${{ env.SLACK_BOT_TOKEN != "" }}
+        if: steps.docker-build.outcome == "success" and (${{ github.ref_name }} == "master" or ${{ github.ref_name }} == "develop") and ${{ inputs.PUSH_IMAGE }} and ${{ env.SLACK_BOT_TOKEN != '' }}
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "C049W03GZQT"
@@ -128,7 +128,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Send a successful Slack notification
         id: slack-success
-        if: steps.docker-build.outcome == "failure" and (${{ github.ref_name }} == "master" or ${{ github.ref_name }} == "develop") and ${{ inputs.PUSH_IMAGE }} and ${{ env.SLACK_BOT_TOKEN != "" }}
+        if: steps.docker-build.outcome == "failure" and (${{ github.ref_name }} == "master" or ${{ github.ref_name }} == "develop") and ${{ inputs.PUSH_IMAGE }} and ${{ env.SLACK_BOT_TOKEN != '' }}
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "C049W03GZQT"
