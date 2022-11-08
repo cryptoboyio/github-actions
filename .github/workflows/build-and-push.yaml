@@ -90,7 +90,6 @@ jobs:
         shell: python
       - name: Build and push docker image
         id: docker-build
-        continue-on-error: true
         uses: docker/build-push-action@v3
         with:
           build-args: |
@@ -129,7 +128,7 @@ jobs:
           os.system(f'echo "SLACK_FAILURE_FLAG={failure_condition}" >> $GITHUB_OUTPUT')
         shell: python
       - name: Send a successful Slack notification
-        if: steps.slack-alert-flag.outputs.SLACK_SUCCESS_FLAG == 'True'
+        if: success() || steps.slack-alert-flag.outputs.SLACK_SUCCESS_FLAG == 'True'
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "C049W03GZQT"
@@ -140,7 +139,7 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Send a failure Slack notification
-        if: steps.slack-alert-flag.outputs.SLACK_FAILURE_FLAG == 'True'
+        if: failure() && steps.slack-alert-flag.outputs.SLACK_FAILURE_FLAG == 'True'
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "C049W03GZQT"
