@@ -33,7 +33,7 @@ on:
       REPOSITORY:
         type: string
         default: ${{ github.event.repository.name }}
-      RUNNER:
+      RUNNERS:
         type: string
         default: self-hosted-general
     secrets:
@@ -47,7 +47,11 @@ on:
 jobs:
   build-and-push:
     name: Build and push docker image
-    runs-on: ${{ inputs.RUNNER }}
+    strategy:
+      fail-fast: true
+      matrix:
+        runner: ${{ inputs.RUNNERS }}
+    runs-on: ${{ matrix.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
