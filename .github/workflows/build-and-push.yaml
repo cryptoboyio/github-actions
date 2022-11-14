@@ -24,6 +24,9 @@ on:
       NO_CACHE:
         type: boolean
         default: false
+      PLATFORMS:
+        type: string
+        default: linux/amd64
       PUSH_IMAGE:
         type: boolean
         default: true
@@ -103,6 +106,7 @@ jobs:
           context: ${{ inputs.CONTEXT }}
           file: ${{ inputs.DOCKERFILE }}
           no-cache: ${{ inputs.NO_CACHE }}
+          platforms: ${{ inputs.PLATFORMS }}
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
             ${{ steps.image-list.outputs.IMAGE_TAG }}
