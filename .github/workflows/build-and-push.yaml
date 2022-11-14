@@ -33,9 +33,6 @@ on:
       REPOSITORY:
         type: string
         default: ${{ github.event.repository.name }}
-      RUNNERS:
-        type: string
-        default: self-hosted-general
     secrets:
       ACCESS_TOKEN:
         required: true
@@ -50,7 +47,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        runner: ${{ inputs.RUNNERS }}
+        runner: ["self-hosted-arm", "self-hosted-general"]
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Checkout
