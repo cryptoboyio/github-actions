@@ -98,15 +98,15 @@ jobs:
           build-args: |
             GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }}
             ${{ secrets.BUILD_ARGS }}
-          cache-from: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.RUNNER_ARCH }}
-          cache-to: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.RUNNER_ARCH }},mode=max
+          cache-from: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.arch }}
+          cache-to: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.arch }},mode=max
           context: ${{ inputs.CONTEXT }}
           file: ${{ inputs.DOCKERFILE }}
           no-cache: ${{ inputs.NO_CACHE }}
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
-            ${{ steps.image-list.outputs.IMAGE_TAG }}-${{ runner.RUNNER_ARCH }}
-            ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}-${{ runner.RUNNER_ARCH }}
+            ${{ steps.image-list.outputs.IMAGE_TAG }}-${{ runner.arch }}
+            ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}-${{ runner.arch }}
       - name: Slack alert condition
         if: success() || failure()
         id: slack-alert-flag
