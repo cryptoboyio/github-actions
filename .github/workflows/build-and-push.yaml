@@ -33,6 +33,9 @@ on:
       REPOSITORY:
         type: string
         default: ${{ github.event.repository.name }}
+      RUNNER:
+        type: string
+        default: self-hosted-general
     secrets:
       ACCESS_TOKEN:
         required: true
@@ -44,11 +47,7 @@ on:
 jobs:
   build-and-push:
     name: Build and push docker image
-    strategy:
-      fail-fast: true
-      matrix:
-        runner: ["self-hosted-arm", "self-hosted-general"]
-    runs-on: ${{ matrix.runner }}
+    runs-on: ${{ inputs.RUNNER }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -102,16 +101,15 @@ jobs:
           build-args: |
             GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }}
             ${{ secrets.BUILD_ARGS }}
-          cache-from: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache
-          cache-to: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.RUNNER_ARCH }}
+          cache-to: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.RUNNER_ARCH }},mode=max
           context: ${{ inputs.CONTEXT }}
           file: ${{ inputs.DOCKERFILE }}
           no-cache: ${{ inputs.NO_CACHE }}
-          platforms: ${{ inputs.PLATFORMS }}
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
-            ${{ steps.image-list.outputs.IMAGE_TAG }}
-            ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}
+            ${{ steps.image-list.outputs.IMAGE_TAG }}-${{ runner.RUNNER_ARCH }}
+            ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}-${{ runner.RUNNER_ARCH }}
       - name: Slack alert condition
         if: success() || failure()
         id: slack-alert-flag
