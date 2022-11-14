@@ -24,9 +24,6 @@ on:
       NO_CACHE:
         type: boolean
         default: false
-      PLATFORMS:
-        type: string
-        default: linux/amd64
       PUSH_IMAGE:
         type: boolean
         default: true
