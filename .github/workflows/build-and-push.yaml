@@ -161,11 +161,9 @@ jobs:
           IMAGE_TAG: ${{ needs.build-and-push-images.outputs.image_tag }}
         run: |
           docker manifest create $IMAGE_TAG_LATEST $IMAGE_TAG_AMD_64 $IMAGE_TAG_ARM_64
+          docker manifest create $IMAGE_TAG $IMAGE_TAG_AMD_64 $IMAGE_TAG_ARM_64
           docker manifest push $IMAGE_TAG_LATEST
-
-          docker pull $IMAGE_TAG_LATEST
-          docker tag $IMAGE_TAG_LATEST $IMAGE_TAG
-          docker push $IMAGE_TAG
+          docker manifest push $IMAGE_TAG
 
       # - name: Slack alert condition
       #   if: success() || failure()
