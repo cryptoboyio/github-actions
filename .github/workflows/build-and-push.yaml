@@ -156,11 +156,13 @@ jobs:
       - name: Build and push docker manifest
         run: |
           docker manifest create ${{ needs.build-and-push-images.outputs.image_tag_latest }} \
-            ${{ needs.build-and-push-images.outputs.image_tag }} \
             ${{ needs.build-and-push-images.outputs.image_tag_amd64 }} \
             ${{ needs.build-and-push-images.outputs.image_tag_arm64 }}
 
           docker manifest push ${{ needs.build-and-push-images.outputs.image_tag_latest }}
+
+          docker tag ${{ needs.build-and-push-images.outputs.image_tag_latest }} ${{ needs.build-and-push-images.outputs.image_tag }}
+          docker push ${{ needs.build-and-push-images.outputs.image_tag }}
 
       # - name: Slack alert condition
       #   if: success() || failure()
