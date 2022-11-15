@@ -123,7 +123,6 @@ jobs:
           no-cache: ${{ inputs.NO_CACHE }}
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
-            ${{ steps.image-list.outputs.IMAGE_TAG }}
             ${{ steps.image-list.outputs.IMAGE_TAG }}-${{ runner.arch }}
       - name: Prepare image tags output
         id: image-tags
@@ -136,7 +135,7 @@ jobs:
           image_tag_latest = "${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}"
 
           os.system(f'echo "image_tag={image_tag}" >> $GITHUB_OUTPUT')
-          os.system(f'echo "image_tag={image_tag_latest}" >> $GITHUB_OUTPUT')
+          os.system(f'echo "image_tag_latest={image_tag_latest}" >> $GITHUB_OUTPUT')
 
           if runner_arch == "ARM64":
               os.system(f'echo "image_tag_arm64={image_tag}-{runner_arch}" >> $GITHUB_OUTPUT')
