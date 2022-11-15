@@ -66,9 +66,9 @@ jobs:
         runner: ${{ fromJson(needs.get-runners-list.outputs.matrix) }}
     runs-on: ${{ matrix.runner }}
     outputs:
-      image_tag: ${{ steps.get-outputs.outputs.image_tag }}
-      image_tag_amd64: ${{ steps.get-outputs.outputs.image_tag_amd64 }}
-      image_tag_arm64: ${{ steps.get-outputs.outputs.image_tag_arm64 }}
+      image_tag: ${{ steps.image-tags.outputs.image_tag }}
+      image_tag_amd64: ${{ steps.image-tags.outputs.image_tag_amd64 }}
+      image_tag_arm64: ${{ steps.image-tags.outputs.image_tag_arm64 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
