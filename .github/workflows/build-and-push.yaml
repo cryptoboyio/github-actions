@@ -123,6 +123,7 @@ jobs:
           no-cache: ${{ inputs.NO_CACHE }}
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
+            ${{ steps.image-list.outputs.IMAGE_TAG }}
             ${{ steps.image-list.outputs.IMAGE_TAG }}-${{ runner.arch }}
       - name: Prepare image tags output
         id: image-tags
