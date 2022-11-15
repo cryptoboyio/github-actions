@@ -69,6 +69,7 @@ jobs:
       image_tag: ${{ steps.image-tags.outputs.image_tag }}
       image_tag_amd64: ${{ steps.image-tags.outputs.image_tag_amd64 }}
       image_tag_arm64: ${{ steps.image-tags.outputs.image_tag_arm64 }}
+      image_tag_latest: ${{ steps.image-tags.outputs.image_tag_latest }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -131,8 +132,10 @@ jobs:
 
           runner_arch = "${{ runner.arch }}"
           image_tag = "${{ steps.image-list.outputs.IMAGE_TAG }}"
+          image_tag_latest = "${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}"
 
           os.system(f'echo "image_tag={image_tag}" >> $GITHUB_OUTPUT')
+          os.system(f'echo "image_tag={image_tag_latest}" >> $GITHUB_OUTPUT')
 
           if runner_arch == "ARM64":
               os.system(f'echo "image_tag_arm64={image_tag}-{runner_arch}" >> $GITHUB_OUTPUT')
@@ -149,7 +152,7 @@ jobs:
       - name: Build and push docker manifest
         run: |
           docker manifest create ${{ needs.build-and-push-images.outputs.image_tag }} \
-            ${{ needs.build-and-push-images.outputs.image_tag }}-latest \
+            ${{ needs.build-and-push-images.outputs.image_tag_latest }} \
             ${{ needs.build-and-push-images.outputs.image_tag_amd64 }} \
             ${{ needs.build-and-push-images.outputs.image_tag_arm64 }}
 
