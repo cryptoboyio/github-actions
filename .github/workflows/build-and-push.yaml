@@ -149,6 +149,10 @@ jobs:
     runs-on: self-hosted-general
     if: ${{ inputs.PUSH_IMAGE }}
     steps:
+      - name: Login to docker registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.REGISTRY }}
       - name: Build and push docker manifest
         run: |
           docker manifest create ${{ needs.build-and-push-images.outputs.image_tag }} \
