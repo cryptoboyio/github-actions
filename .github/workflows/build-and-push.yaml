@@ -65,6 +65,10 @@ jobs:
       matrix:
         runner: ${{ fromJson(needs.get-runners-list.outputs.matrix) }}
     runs-on: ${{ matrix.runner }}
+    outputs:
+      image_tag: ${{ steps.get-outputs.outputs.image_tag }}
+      image_tag_amd64: ${{ steps.get-outputs.outputs.image_tag_amd64 }}
+      image_tag_arm64: ${{ steps.get-outputs.outputs.image_tag_arm64 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -119,16 +123,37 @@ jobs:
           push: ${{ inputs.PUSH_IMAGE }}
           tags: |
             ${{ steps.image-list.outputs.IMAGE_TAG }}-${{ runner.arch }}
-            ${{ steps.image-list.outputs.IMAGE_TAG_LATEST }}-${{ runner.arch }}
+      - name: Prepare image tags output
+        id: image-tags
+        if: ${{ inputs.PUSH_IMAGE }}
+        run: |
+          import os
+
+          runner_arch = "${{ runner.arch }}"
+          image_tag = "${{ steps.image-list.outputs.IMAGE_TAG }}"
+
+          os.system(f'echo "image_tag={image_tag}" >> $GITHUB_OUTPUT')
+
+          if runner_arch == "ARM64":
+              os.system(f'echo "image_tag_arm64={image_tag}-{runner_arch}" >> $GITHUB_OUTPUT')
+          elif runner_arch == "X64":
+              os.system(f'echo "image_tag_amd64={image_tag}-{runner_arch}" >> $GITHUB_OUTPUT')
+        shell: python
 
   build-and-push-manifest:
     name: Build and push docker manifest
-    needs: get-runners-list
-    strategy:
-      fail-fast: true
-      matrix:
-        runner: ${{ fromJson(needs.get-runners-list.outputs.matrix) }}
-    runs-on: ${{ matrix.runner }}
+    needs: build-and-push-images
+    runs-on: self-hosted-general
+    if: ${{ inputs.PUSH_IMAGE }}
+    steps:
+      - name: Build and push docker manifest
+        run: |
+          docker manifest create ${{ needs.build-and-push-images.outputs.image_tag }} \
+            ${{ needs.build-and-push-images.outputs.image_tag }}-latest \
+            ${{ needs.build-and-push-images.outputs.image_tag_amd64 }} \
+            ${{ needs.build-and-push-images.outputs.image_tag_arm64 }}
+
+          docker manifest push ${{ needs.build-and-push-images.outputs.image_tag }}
 
       # - name: Slack alert condition
       #   if: success() || failure()
