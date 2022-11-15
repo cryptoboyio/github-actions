@@ -43,10 +43,10 @@ on:
 
 jobs:
   get-runners-list:
-    name: Get a list of runners
+    name: Get runners list output
     runs-on: ubuntu-22.04
     steps:
-      - name: Create a matrix list
+      - name: Create runners list output
         id: runners-list
         run: |
           import os
