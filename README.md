@@ -6,31 +6,33 @@
 
 ### Inputs
 
-| Name               | Type    | Required | Default value                                     | Description                |
-| ------------------ | ------- | -------- | ------------------------------------------------- | -------------------------- |
-| `CONTEXT`          | String  | false    | `.`                                               | Docker context             |
-| `DOCKERFILE`       | String  | false    | `Dockerfile`                                      | Dockerfile                 |
-| `IMAGE_TAG`        | String  | false    | `${{ github.ref_name }}-${{ github.run_number }}` | Image tag                  |
-| `IMAGE_TAG_LATEST` | String  | false    | `${{ github.ref_name }}-latest`                   | Image tag latest           |
-| `NO_CACHE`         | Boolean | false    | `false`                                           | Build without cache        |
-| `PUSH_IMAGE`       | Boolean | false    | `true`                                            | Push image to the registry |
-| `REPOSITORY`       | String  | false    | `${{ github.event.repository.name }}`             | Repository in the registry |
+| Name               | Type    | Required | Default value            | Description                      |
+| ------------------ | ------- | -------- | ------------------------ | -------------------------------- |
+| `CACHE_REGISTRY`   | String  | false    | `cache-registry.mrcr.io` | Docker layers cache registry     |
+| `CONTEXT`          | String  | false    | `.`                      | Docker context                   |
+| `DEFAULT_RUNNER`   | String  | false    | `self-hosted`            | Default runner                   |
+| `DOCKERFILE`       | String  | false    | `Dockerfile`             | Dockerfile                       |
+| `IMAGE_TAG`        | String  | false    | `BRANCH_NAME-RUN_NUMBER` | Image tag                        |
+| `IMAGE_TAG_LATEST` | String  | false    | `BRANCH_NAME-latest`     | Image tag latest                 |
+| `NO_CACHE`         | Boolean | false    | `false`                  | Build without cache              |
+| `PUSH_IMAGE`       | Boolean | false    | `true`                   | Push image to the registry       |
+| `REGISTRY`         | String  | false    | `***`                    | Docker registry                  |
+| `REPOSITORY`       | String  | false    | `GITHUB_REPOSITORY`      | Repository in the registry       |
+| `RUNNERS`          | String  | false    | `self-hosted-general`    | Runner types for different archs |
 
 If `IMAGE_TAG` or `IMAGE_TAG_LATEST` contains a `/` character, then the default values ​​will be as follows:
 
-| Name               | Value                            |
-| ------------------ | -------------------------------- |
-| `IMAGE_TAG`        | `build-${{ github.run_number }}` |
-| `IMAGE_TAG_LATEST` | `build-latest`                   |
+| Name               | Value              |
+| ------------------ | ------------------ |
+| `IMAGE_TAG`        | `build-RUN_NUMBER` |
+| `IMAGE_TAG_LATEST` | `build-latest`     |
 
 ### Secrets
 
-| Name             | Type   | Required | Description           |
-| ---------------- | ------ | -------- | --------------------- |
-| `ACCESS_TOKEN`   | String | true     | GitHub access token   |
-| `BUILD_ARGS`     | List   | false    | Docker build args     |
-| `CACHE_REGISTRY` | String | false    | Docker сache registry |
-| `REGISTRY`       | String | false    | Docker registry       |
+| Name           | Type   | Required | Description         |
+| -------------- | ------ | -------- | ------------------- |
+| `ACCESS_TOKEN` | String | true     | GitHub access token |
+| `BUILD_ARGS`   | List   | false    | Docker build args   |
 
 ### Examples
 
@@ -47,7 +49,9 @@ on:
 jobs:
   build-and-push:
     name: Build ${{ github.ref_name }}-${{ github.run_number }}
-    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.0
+    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.1
+    with:
+      RUNNERS: self-hosted-go-amd,self-hosted-go-arm
     secrets:
       ACCESS_TOKEN: ${{ secrets.ACCESS_REPOS_TOKEN }}
 ```
@@ -64,7 +68,7 @@ on:
 jobs:
   build:
     name: Build PR-${{ github.run_number }}
-    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.0
+    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.1
     with:
       PUSH_IMAGE: false
     secrets:

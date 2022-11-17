@@ -3,12 +3,12 @@ name: Build & Push Docker Image
 on:
   workflow_call:
     inputs:
-      CONTEXT:
-        type: string
-        default: .
       CACHE_REGISTRY:
         type: string
         default: cache-registry.mrcr.io
+      CONTEXT:
+        type: string
+        default: .
       DEFAULT_RUNNER:
         type: string
         default: self-hosted-general
@@ -40,8 +40,6 @@ on:
       ACCESS_TOKEN:
         required: true
       BUILD_ARGS:
-        required: false
-      SLACK_BOT_TOKEN:
         required: false
 
 jobs:
