@@ -149,7 +149,7 @@ jobs:
   build-and-push-manifest:
     name: Build and push docker manifest
     needs: build-and-push-images
-    runs-on: ${{ inputs.RUNNERS }}
+    runs-on: ${{ inputs.DEFAULT_RUNNER }}
     if: ${{ inputs.PUSH_IMAGE }}
     steps:
       - name: Login to docker registry
