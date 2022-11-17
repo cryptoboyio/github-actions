@@ -47,7 +47,7 @@ on:
 jobs:
   get-runners-list:
     name: Get runners list output
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.DEFAULT_RUNNER }}
     steps:
       - name: Create runners list output
         id: runners-list
@@ -61,7 +61,7 @@ jobs:
       matrix: ${{ steps.runners-list.outputs.matrix }}
 
   build-and-push-images:
-    name: Build and push docker image
+    name: Build and push docker images
     needs: get-runners-list
     strategy:
       fail-fast: true
@@ -147,7 +147,7 @@ jobs:
         shell: python
 
   build-and-push-manifest:
-    name: Build and push docker manifest
+    name: Build and push docker manifests
     needs: build-and-push-images
     runs-on: ${{ inputs.DEFAULT_RUNNER }}
     if: ${{ inputs.PUSH_IMAGE }}
