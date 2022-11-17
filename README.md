@@ -6,19 +6,19 @@
 
 ### Inputs
 
-| Name               | Type    | Required | Default value            | Description                      |
-| ------------------ | ------- | -------- | ------------------------ | -------------------------------- |
-| `CACHE_REGISTRY`   | String  | false    | `cache-registry.mrcr.io` | Docker layers cache registry     |
-| `CONTEXT`          | String  | false    | `.`                      | Docker context                   |
-| `DEFAULT_RUNNER`   | String  | false    | `self-hosted`            | Default runner                   |
-| `DOCKERFILE`       | String  | false    | `Dockerfile`             | Dockerfile                       |
-| `IMAGE_TAG`        | String  | false    | `BRANCH_NAME-RUN_NUMBER` | Image tag                        |
-| `IMAGE_TAG_LATEST` | String  | false    | `BRANCH_NAME-latest`     | Image tag latest                 |
-| `NO_CACHE`         | Boolean | false    | `false`                  | Build without cache              |
-| `PUSH_IMAGE`       | Boolean | false    | `true`                   | Push image to the registry       |
-| `REGISTRY`         | String  | false    | `***`                    | Docker registry                  |
-| `REPOSITORY`       | String  | false    | `GITHUB_REPOSITORY`      | Repository in the registry       |
-| `RUNNERS`          | String  | false    | `self-hosted-general`    | Runner types for different archs |
+| Name               | Type    | Required | Default value         | Description                      |
+| ------------------ | ------- | -------- | --------------------- | -------------------------------- |
+| `CACHE_REGISTRY`   | String  | false    | `***`                 | Docker layers cache registry     |
+| `CONTEXT`          | String  | false    | `.`                   | Docker context                   |
+| `DEFAULT_RUNNER`   | String  | false    | `self-hosted`         | Default runner                   |
+| `DOCKERFILE`       | String  | false    | `Dockerfile`          | Dockerfile                       |
+| `IMAGE_TAG`        | String  | false    | `BRANCH-RUN_NUMBER`   | Image tag                        |
+| `IMAGE_TAG_LATEST` | String  | false    | `BRANCH-latest`       | Image tag latest                 |
+| `NO_CACHE`         | Boolean | false    | `false`               | Build without cache              |
+| `PUSH_IMAGE`       | Boolean | false    | `true`                | Push image to the registry       |
+| `REGISTRY`         | String  | false    | `***`                 | Docker registry                  |
+| `REPOSITORY`       | String  | false    | `GITHUB_REPOSITORY`   | Repository in the registry       |
+| `RUNNERS`          | String  | false    | `self-hosted-general` | Runner types for different archs |
 
 If `IMAGE_TAG` or `IMAGE_TAG_LATEST` contains a `/` character, then the default values ​​will be as follows:
 
