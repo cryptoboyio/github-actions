@@ -83,10 +83,13 @@ jobs:
         run: |
           import os
 
+          from base64 import b64encode
+          from secrets import token_bytes
+
           options = {
               "go": {
                   "path": ["/go/pkg/mod", "/root/.cache/go-build", "/root/.cache/golangci-lint"],
-                  "hash_file": "go.sum",
+                  "hash_file": "./go.sum",
               }
           }
 
@@ -98,13 +101,19 @@ jobs:
                   os.system(f'echo "CACHE_CONFIG_READY={0}" >> $GITHUB_OUTPUT')
                   return
               try:
-                  path = ",".join(options[lang][PATH_KEY])
+                  path = "\n".join(options[lang][PATH_KEY])
                   hash_file = options[lang][HASH_FILE_KEY].strip()
 
                   if path != "" and hash_file != "":
                       os.system(f'echo "CACHE_LANG={lang}" >> $GITHUB_OUTPUT')
-                      os.system(f'echo "CACHE_PATH={path}" >> $GITHUB_OUTPUT')
                       os.system(f'echo "CACHE_HASH_FILE={hash_file}" >> $GITHUB_OUTPUT')
+
+                      # https://github.com/orgs/community/discussions/26288#discussioncomment-3876281
+                      delimiter = b64encode(token_bytes(32)).decode()
+                      os.system(f'echo "CACHE_PATH<<{delimiter}" >> $GITHUB_OUTPUT')
+                      os.system(f'echo "{path}" >> $GITHUB_OUTPUT')
+                      os.system(f'echo "{delimiter}" >> $GITHUB_OUTPUT')
+
                       os.system(f'echo "CACHE_CONFIG_READY={1}" >> $GITHUB_OUTPUT')
                   else:
                       raise KeyError
@@ -117,25 +126,12 @@ jobs:
 
           set_cache_options("${{ inputs.LANG }}")
         shell: python
-      - name: Get cache path option
-        id: cache-path-option
-        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options.outputs.CACHE_CONFIG_READY }} == "1"
-        run: |
-          path=$(echo -e "${{ steps.cache-options.outputs.CACHE_PATH }}" | tr ',' '\n' | awk NF)
-
-          path="${path//'%'/'%25'}"
-          path="${path//$'\n'/'%0A'}"
-          path="${path//$'\r'/'%0D'}"
-
-          echo "CACHE_PATH=$path" >> $GITHUB_OUTPUT
-          echo "CACHE_CONFIG_READY=1" >> $GITHUB_OUTPUT
-        shell: bash
       - name: Actions cache
         uses: actions/cache@v3.0.11
-        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-path-option.outputs.CACHE_CONFIG_READY }} == "1"
+        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options.outputs.CACHE_CONFIG_READY }} == "1"
         with:
           path: |
-            ${{ steps.cache-path-option.outputs.CACHE_PATH }}
+            ${{ steps.cache-options.outputs.CACHE_PATH }}
           key: ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-${{ hashFiles('${{ steps.cache-options.outputs.CACHE_HASH_FILE }}') }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-
