@@ -98,7 +98,7 @@ jobs:
                   os.system(f'echo "CACHE_CONFIG_READY={0}" >> $GITHUB_OUTPUT')
                   return
               try:
-                  path = "\n".join(options[lang][PATH_KEY])
+                  path = ",".join(options[lang][PATH_KEY])
                   hash_file = options[lang][HASH_FILE_KEY].strip()
 
                   if path != "" and hash_file != "":
