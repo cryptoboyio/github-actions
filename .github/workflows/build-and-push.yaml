@@ -178,10 +178,10 @@ jobs:
           build-args: |
             GITHUB_TOKEN=${{ secrets.ACCESS_TOKEN }}
             ${{ secrets.BUILD_ARGS }}
-          # cache-from: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.arch }}
-          # cache-to: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.arch }},mode=max
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.arch }}
+          cache-to: type=registry,ref=${{ inputs.CACHE_REGISTRY }}/${{ inputs.REPOSITORY }}:buildcache-${{ runner.arch }},mode=max
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
           context: ${{ inputs.CONTEXT }}
           file: ${{ inputs.DOCKERFILE }}
           no-cache: ${{ inputs.NO_CACHE }}
