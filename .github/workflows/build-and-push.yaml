@@ -41,6 +41,8 @@ on:
         required: true
       BUILD_ARGS:
         required: false
+      SLACK_BOT_TOKEN:
+        required: false
 
 jobs:
   get-runners-list:
@@ -155,6 +157,7 @@ jobs:
         with:
           registry: ${{ inputs.REGISTRY }}
       - name: Build and push docker manifest
+        id: docker-manifest
         env:
           IMAGE_TAG_LATEST: ${{ needs.build-and-push-images.outputs.image_tag_latest }}
           IMAGE_TAG_AMD_64: ${{ needs.build-and-push-images.outputs.image_tag_amd64 }}
@@ -180,3 +183,44 @@ jobs:
           os.system('docker manifest push $IMAGE_TAG_LATEST')
           os.system('docker manifest push $IMAGE_TAG')
         shell: python
+      - name: Slack alert condition
+        if: success() || failure()
+        id: slack-alert-flag
+        run: |
+          import os
+
+          BRANCH_NAME, OUTCOME = '${{ github.ref_name }}', '${{ steps.docker-manifest.outcome }}'
+          PUSH_IMAGE, SLACK_TOKEN = bool('${{ inputs.PUSH_IMAGE }}'), '${{ secrets.SLACK_BOT_TOKEN }}'
+
+          general_condition = BRANCH_NAME in ['develop', 'master'] and PUSH_IMAGE and SLACK_TOKEN != ''
+          success_condition = OUTCOME == 'success' and general_condition
+          failure_condition = OUTCOME == 'failure' and general_condition
+
+          print(f'Slack alert SUCCESS condition: {success_condition}')
+          print(f'Slack alert FAILURE condition: {failure_condition}')
+
+          os.system(f'echo "SLACK_SUCCESS_FLAG={success_condition}" >> $GITHUB_OUTPUT')
+          os.system(f'echo "SLACK_FAILURE_FLAG={failure_condition}" >> $GITHUB_OUTPUT')
+        shell: python
+      - name: Send a successful Slack notification
+        if: success() && steps.slack-alert-flag.outputs.SLACK_SUCCESS_FLAG == 'True'
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: "C049W03GZQT"
+          payload: |
+            {
+              "text": ":white_check_mark: *${{ inputs.REPOSITORY }}* – `${{ github.ref_name }}-${{ github.run_number }}` successful build"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Send a failure Slack notification
+        if: failure() && steps.slack-alert-flag.outputs.SLACK_FAILURE_FLAG == 'True'
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: "C049W03GZQT"
+          payload: |
+            {
+              "text": ":ahhhhhhhhh: *${{ inputs.REPOSITORY }}* – `${{ github.ref_name }}-${{ github.run_number }}` failed build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

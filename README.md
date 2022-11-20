@@ -29,10 +29,11 @@ If `IMAGE_TAG` or `IMAGE_TAG_LATEST` contains a `/` character, then the default 
 
 ### Secrets
 
-| Name           | Type   | Required | Description         |
-| -------------- | ------ | -------- | ------------------- |
-| `ACCESS_TOKEN` | String | true     | GitHub access token |
-| `BUILD_ARGS`   | List   | false    | Docker build args   |
+| Name              | Type   | Required | Description                       |
+| ----------------- | ------ | -------- | --------------------------------- |
+| `ACCESS_TOKEN`    | String | true     | GitHub access token               |
+| `BUILD_ARGS`      | List   | false    | Docker build args                 |
+| `SLACK_BOT_TOKEN` | String | false    | Slack bot token for notifications |
 
 ### Examples
 
@@ -51,9 +52,10 @@ jobs:
     name: Build ${{ github.ref_name }}-${{ github.run_number }}
     uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.1
     with:
-      RUNNERS: self-hosted-go-amd,self-hosted-go-arm
+      RUNNERS: self-hosted-general,self-hosted-arm
     secrets:
       ACCESS_TOKEN: ${{ secrets.ACCESS_REPOS_TOKEN }}
+      SLACK_BOT_TOKEN: ${{ secrets.ACTIONS_SLACK_BOT_TOKEN }}
 ```
 
 ```yaml
