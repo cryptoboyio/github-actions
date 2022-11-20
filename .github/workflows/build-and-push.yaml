@@ -98,7 +98,7 @@ jobs:
                   os.system(f'echo "CACHE_CONFIG_READY={0}" >> $GITHUB_OUTPUT')
                   return
               try:
-                  path = "\n".join(options[lang][PATH_KEY])
+                  path = ",".join(options[lang][PATH_KEY])
                   hash_file = options[lang][HASH_FILE_KEY].strip()
 
                   if path != "" and hash_file != "":
@@ -121,8 +121,7 @@ jobs:
         uses: actions/cache@v3.0.11
         if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options.outputs.CACHE_CONFIG_READY }} == "1"
         with:
-          path: |
-            ${{ steps.cache-options.outputs.CACHE_PATH }}
+          path: ${{ steps.cache-options.outputs.CACHE_PATH }}
           key: ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-${{ hashFiles('${{ steps.cache-options.outputs.CACHE_HASH_FILE }}') }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-
