@@ -91,7 +91,7 @@ jobs:
 
           options = {
               "go": {
-                  "path": ["~/go/pkg/mod", "~/.cache/go-build", "~/.cache/golangci-lint"],
+                  "path": ["~/go/pkg/mod", "~/.cache/go-build"],
                   "hash_file": "**/go.sum",
               }
           }
