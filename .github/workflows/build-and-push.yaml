@@ -127,7 +127,7 @@ jobs:
           set_cache_options("${{ inputs.LANG }}")
         shell: python
       - name: Actions cache
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options.outputs.CACHE_CONFIG_READY }} == "1"
         with:
           path: |
