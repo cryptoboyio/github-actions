@@ -93,17 +93,6 @@ jobs:
           PATH_KEY = "path"
           HASH_FILE_KEY = "hash_file"
 
-          # https://github.com/orgs/community/discussions/26288
-          def set_multiline_str(str_key: str, str_val: str):
-              os.system(f'{str_key}=$(cat << EOF\n{str}\nEOF\n)')
-              _1 = "str_key=\\\"${str_key//\\\'%\\\'/\\\'%25\\\'}\\\"".replace('str_key', str_key)
-              _2 = "str_key=\"${str_key//$\'\\n\'/\'%0A\'}\"".replace('str_key', str_key)
-              _3 = "str_key=\"${str_key//$\'\\r\'/\'%0D\'}\"".replace('str_key', str_key)
-              os.system(_1)
-              os.system(_2)
-              os.system(_3)
-              os.system(f'echo "{str_key}={str_val}" >> $GITHUB_OUTPUT')
-
           def set_cache_options(lang: str):
               if lang not in options:
                   os.system(f'echo "CACHE_CONFIG_READY={0}" >> $GITHUB_OUTPUT')
@@ -114,8 +103,8 @@ jobs:
 
                   if path != "" and hash_file != "":
                       os.system(f'echo "CACHE_LANG={lang}" >> $GITHUB_OUTPUT')
+                      os.system(f'echo "CACHE_PATH={path}" >> $GITHUB_OUTPUT')
                       os.system(f'echo "CACHE_HASH_FILE={hash_file}" >> $GITHUB_OUTPUT')
-                      set_multiline_str("CACHE_PATH", path)
                       os.system(f'echo "CACHE_CONFIG_READY={1}" >> $GITHUB_OUTPUT')
                   else:
                       raise KeyError
@@ -128,11 +117,25 @@ jobs:
 
           set_cache_options("${{ inputs.LANG }}")
         shell: python
+      - name: Get cache multiline option
+        id: cache-options-multiline
+        if: ${{ inputs.LANG }} != ""
+        run: |
+          path=$(echo -e "${{ steps.cache-options.outputs.CACHE_PATH }}" | tr ',' '\n' | awk NF)
+
+          path="${path//'%'/'%25'}"
+          path="${path//$'\n'/'%0A'}"
+          path="${path//$'\r'/'%0D'}"
+
+          echo "CACHE_PATH=$path" >> $GITHUB_OUTPUT
+          echo "CACHE_CONFIG_READY=1" >> $GITHUB_OUTPUT
+        shell: bash
       - name: Actions cache
         uses: actions/cache@v3.0.11
         if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options.outputs.CACHE_CONFIG_READY }} == "1"
         with:
-          path: ${{ steps.cache-options.outputs.CACHE_PATH }}
+          path: |
+            ${{ steps.cache-options.outputs.CACHE_PATH }}
           key: ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-${{ hashFiles('${{ steps.cache-options.outputs.CACHE_HASH_FILE }}') }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-
