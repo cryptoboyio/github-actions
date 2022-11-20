@@ -50,7 +50,7 @@ on:
 jobs:
   build-and-push:
     name: Build ${{ github.ref_name }}-${{ github.run_number }}
-    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.1
+    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.2
     with:
       RUNNERS: self-hosted-general,self-hosted-arm
     secrets:
@@ -70,7 +70,7 @@ on:
 jobs:
   build:
     name: Build PR-${{ github.run_number }}
-    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.1
+    uses: cryptoboyio/github-actions/.github/workflows/build-and-push.yaml@v1.0.2
     with:
       PUSH_IMAGE: false
     secrets:
