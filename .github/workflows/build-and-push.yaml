@@ -86,13 +86,12 @@ jobs:
           from base64 import b64encode
           from secrets import token_bytes
 
-          GITHUB_WORSPACE = "${{ github.workspace }}"
           PATH_KEY = "path"
           HASH_FILE_KEY = "hash_file"
 
           options = {
               "go": {
-                  "path": [f"{GITHUB_WORSPACE}/go/pkg/mod", f"{GITHUB_WORSPACE}/.cache/go-build", f"{GITHUB_WORSPACE}/.cache/golangci-lint"],
+                  "path": ["~/go/pkg/mod", "~/.cache/go-build", "~/.cache/golangci-lint"],
                   "hash_file": "**/go.sum",
               }
           }
