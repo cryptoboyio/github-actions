@@ -85,8 +85,8 @@ jobs:
 
           options = {
               "go": {
-                  "path": ["~/go/pkg/mod", "~/.cache/go-build", "~/.cache/golangci-lint"],
-                  "hash_file": "**/go.sum",
+                  "path": ["/go/pkg/mod", "/root/.cache/go-build", "/root/.cache/golangci-lint"],
+                  "hash_file": "go.sum",
               }
           }
 
@@ -117,9 +117,9 @@ jobs:
 
           set_cache_options("${{ inputs.LANG }}")
         shell: python
-      - name: Get cache multiline option
-        id: cache-options-multiline
-        if: ${{ inputs.LANG }} != ""
+      - name: Get cache path option
+        id: cache-path-option
+        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options.outputs.CACHE_CONFIG_READY }} == "1"
         run: |
           path=$(echo -e "${{ steps.cache-options.outputs.CACHE_PATH }}" | tr ',' '\n' | awk NF)
 
@@ -132,10 +132,10 @@ jobs:
         shell: bash
       - name: Actions cache
         uses: actions/cache@v3.0.11
-        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options-multiline.outputs.CACHE_CONFIG_READY }} == "1"
+        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-path-option.outputs.CACHE_CONFIG_READY }} == "1"
         with:
           path: |
-            ${{ steps.cache-options-multiline.outputs.CACHE_PATH }}
+            ${{ steps.cache-path-option.outputs.CACHE_PATH }}
           key: ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-${{ hashFiles('${{ steps.cache-options.outputs.CACHE_HASH_FILE }}') }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-
