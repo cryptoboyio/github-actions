@@ -132,10 +132,10 @@ jobs:
         shell: bash
       - name: Actions cache
         uses: actions/cache@v3.0.11
-        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options.outputs.CACHE_CONFIG_READY }} == "1"
+        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options-multiline.outputs.CACHE_CONFIG_READY }} == "1"
         with:
           path: |
-            ${{ steps.cache-options.outputs.CACHE_PATH }}
+            ${{ steps.cache-options-multiline.outputs.CACHE_PATH }}
           key: ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-${{ hashFiles('${{ steps.cache-options.outputs.CACHE_HASH_FILE }}') }}
           restore-keys: |
             ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-
