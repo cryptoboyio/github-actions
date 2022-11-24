@@ -209,7 +209,7 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": ":white_check_mark: *${{ inputs.REPOSITORY }}* – `${{ github.ref_name }}-${{ github.run_number }}` successful build"
+              "text": ":heavy_check_mark: *${{ inputs.REPOSITORY }}* – `${{ github.ref_name }}-${{ github.run_number }}` successful build"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -220,7 +220,7 @@ jobs:
           channel-id: "C049W03GZQT"
           payload: |
             {
-              "text": ":ahhhhhhhhh: *${{ inputs.REPOSITORY }}* – `${{ github.ref_name }}-${{ github.run_number }}` failed build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+              "text": ":x: *${{ inputs.REPOSITORY }}* – `${{ github.ref_name }}-${{ github.run_number }}` failed build:\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
