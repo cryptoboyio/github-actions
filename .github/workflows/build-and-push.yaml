@@ -21,6 +21,9 @@ on:
       IMAGE_TAG_LATEST:
         type: string
         default: ${{ github.ref_name }}-latest
+      LANG:
+        type: string
+        default: ""
       NO_CACHE:
         type: boolean
         default: false
@@ -76,6 +79,64 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3.1.0
+      - name: Get cache options
+        id: cache-options
+        if: ${{ inputs.LANG }} != ""
+        run: |
+          import os
+
+          from base64 import b64encode
+          from secrets import token_bytes
+
+          PATH_KEY = "path"
+          HASH_FILE_KEY = "hash_file"
+
+          options = {
+              "go": {
+                  "path": ["~/go/pkg/mod", "~/.cache/go-build"],
+                  "hash_file": "**/go.sum",
+              }
+          }
+
+          def set_cache_options(lang: str):
+              if lang not in options:
+                  os.system(f'echo "CACHE_CONFIG_READY={0}" >> $GITHUB_OUTPUT')
+                  return
+              try:
+                  path = "\n".join(options[lang][PATH_KEY])
+                  hash_file = options[lang][HASH_FILE_KEY].strip()
+
+                  if path != "" and hash_file != "":
+                      os.system(f'echo "CACHE_LANG={lang}" >> $GITHUB_OUTPUT')
+                      os.system(f'echo "CACHE_HASH_FILE={hash_file}" >> $GITHUB_OUTPUT')
+
+                      # https://github.com/orgs/community/discussions/26288#discussioncomment-3876281
+                      delimiter = b64encode(token_bytes(32)).decode()
+                      os.system(f'echo "CACHE_PATH<<{delimiter}" >> $GITHUB_OUTPUT')
+                      os.system(f'echo "{path}" >> $GITHUB_OUTPUT')
+                      os.system(f'echo "{delimiter}" >> $GITHUB_OUTPUT')
+
+                      os.system(f'echo "CACHE_CONFIG_READY={1}" >> $GITHUB_OUTPUT')
+                  else:
+                      raise KeyError
+              except KeyError:
+                  print(f'Cache config is incorrectly set for {lang} applications')
+              except Exception as e:
+                  print(e)
+              finally:
+                  os.system(f'echo "CACHE_CONFIG_READY={0}" >> $GITHUB_OUTPUT')
+
+          set_cache_options("${{ inputs.LANG }}")
+        shell: python
+      - name: Actions cache
+        uses: actions/cache@v3
+        if: ${{ inputs.LANG }} != "" && ${{ steps.cache-options.outputs.CACHE_CONFIG_READY }} == "1"
+        with:
+          path: |
+            ${{ steps.cache-options.outputs.CACHE_PATH }}
+          key: ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.cache-options.outputs.CACHE_LANG }}-
       - name: Set up docker context for buildx
         id: buildx-context
         run: |
